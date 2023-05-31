@@ -16,7 +16,11 @@ function readFileFromServer(fileName) {
 
 function writeFileToServer(videoDetails, fileName) {
     const videoDetailsStringified = JSON.stringify(videoDetails);
-    fs.writeFileSync(fileName, videoDetailsStringified);
+    try {
+        fs.writeFileSync(fileName, videoDetailsStringified);
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 }
 
 module.exports = {

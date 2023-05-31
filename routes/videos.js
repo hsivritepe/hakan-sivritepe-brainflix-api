@@ -80,6 +80,11 @@ router.post('/:videoId/comments', (req, res) => {
     const videoCommentArr = videoDetails.find(
         (item) => item.id === req.params.videoId
     ).comments;
+    if (!videoCommentArr) {
+        return res
+            .status(500)
+            .send('Can not find the video or comments');
+    }
 
     const newComment = {
         ...req.body,
@@ -91,7 +96,7 @@ router.post('/:videoId/comments', (req, res) => {
     // Write the data to the file
     utils.writeFileToServer(videoDetails, process.env.JSON_FILE);
 
-    res.send(req.body);
+    res.status(200).send(newComment);
     // res.send(videoDetails);
 });
 
