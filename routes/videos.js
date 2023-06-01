@@ -136,4 +136,26 @@ router.delete('/:videoId/comments/:commentId', (req, res) => {
     res.status(200).send(videoDetails);
 });
 
+router.put('/:videoId/likes', (req, res) => {
+    // Read the JSON file
+    const videoDetails = utils.readFileFromServer(
+        process.env.JSON_FILE
+    );
+
+    // Get the index of the video in the array and return the error if it can not be found
+    const videoIndex = videoDetails.findIndex(
+        (video) => video.id === req.params.videoId
+    );
+    if (videoIndex === -1) {
+        return res
+            .status(500)
+            .send('Can not find the video, check the video ID');
+    }
+    videoDetails[videoIndex].likes++;
+
+    utils.writeFileToServer(videoDetails, process.env.JSON_FILE);
+
+    res.status(200).send(videoDetails[videoIndex]);
+});
+
 module.exports = router;
